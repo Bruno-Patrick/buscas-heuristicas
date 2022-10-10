@@ -12,6 +12,7 @@ void imprimir_matriz();
 int melhorIndice(int indice, int *tour);
 void imprimir_tour(int *tour);
 bool verificartour(int indice, int *tour);
+int best_city(int indice, int *tour);
 
 int **distanceMatrix, size=-1, pos=0;
 
@@ -106,16 +107,18 @@ int main(const int argc, const char **inputFile){
 		}
 	}
 
-	int tour[size];
-	int i, j, menor, num_city = 0;
+	int tour[size], i, j, menor, num_city = 0;
 	for(int i=1; i<size; i++)
 		tour[i]= -1;
+	// tour[0] = 0;
 
-	imprimir_matriz();
-	for(i=0;i<size;i++){
-		num_city = melhorIndice(num_city, tour);
-		tour[i] = num_city;
+	// imprimir_matriz();
+	// num_city = 0;
+	for(j=0;j<size;j++){
+		num_city = best_city(num_city, tour);
+		tour[j] = num_city;
 	}
+
 	imprimir_tour(tour);
 	printf("\n distancia da gulosa: %d \n", calculateTourDistance(tour));
 
@@ -199,6 +202,28 @@ int melhorIndice(int indice, int *tour){
 	}
 
 
+	return num_city;
+}
+
+int best_city(int indice, int *tour){
+	int i, j, num_city, menor = INT_MAX, flag;
+
+	for(i=0;i<size;i++){
+		flag = 0;
+		for(j=0;j<size;j++){
+			if(tour[j] == i){
+				flag = 1;
+				// printf("\ntour = %d cidade = %d\n", tour[j], i);
+			}
+		}
+		if(flag == 0){
+			if(distanceMatrix[indice][i] < menor){
+				menor = distanceMatrix[indice][i];
+				num_city = i;
+				// printf("\nmenor = %d cidade = %d\n", menor, num_city);
+			}
+		}
+	}
 	return num_city;
 }
 
