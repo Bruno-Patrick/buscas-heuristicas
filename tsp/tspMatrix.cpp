@@ -9,9 +9,7 @@
 
 int calculateTourDistance(int *tour);//calculate the distance of a tour
 void imprimir_matriz();
-int melhorIndice(int indice, int *tour);
 void imprimir_tour(int *tour);
-bool verificartour(int indice, int *tour);
 int best_city(int indice, int *tour);
 
 int **distanceMatrix, size=-1, pos=0;
@@ -142,67 +140,6 @@ void imprimir_matriz(){
 		}
 	printf("\n\n");
 	}
-}
-
-int outromenor(int indice,int menor,int controle, int *tour){
-    int i, j, menor2,num_city;
-    for (i = 0; i < size; i++){
-
-		if (distanceMatrix[indice][i] > menor && distanceMatrix[indice][i] < controle && indice != i){
-			for(j=0;j<size;j++){
-				if (distanceMatrix[indice][i] == tour[j]){
-                    menor = distanceMatrix[indice][i];
-                    menor = outromenor(indice,menor,controle,tour);
-				}
-				else
-					menor2 = distanceMatrix[indice][i];
-			}
-			num_city = i;
-		}
-    }
-    return num_city;
-}
-
-bool verificartour(int indice, int *tour){
-    int i;
-    for(i=0;i<size;i++){
-		if (tour[i] == indice)
-			return true;
-	}
-    return false;
-}
-
-int melhorIndice(int indice, int *tour){
-
-	int i,j, num_city;
-    int menor = INT_MAX;
-	int controle = 0;
-	int flag;
-
-	for (j = 0; j < size; j++){
-		if (distanceMatrix[indice][j] < menor && indice != j){
-
-            for(i=0;i<size;i++){
-                if(j == tour[i]){
-                    flag = 1;
-                    break;
-                }
-            }
-			menor = distanceMatrix[indice][j];
-			num_city = j;
-		}
-	}
-	if(flag == 1){
-		for (i = 0; i < size; i++){
-		if (distanceMatrix[indice][i] > menor && indice != i){
-			controle = distanceMatrix[indice][i];
-            }
-		}
-        num_city = outromenor(indice,menor,controle,tour);
-	}
-
-
-	return num_city;
 }
 
 int best_city(int indice, int *tour){
