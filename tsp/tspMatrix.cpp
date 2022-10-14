@@ -11,6 +11,7 @@ int calculateTourDistance(int *tour);//calculate the distance of a tour
 void imprimir_matriz();
 void imprimir_tour(int *tour);
 int best_city(int indice, int *tour);
+void simulated_annealing(int *tour);
 
 int **distanceMatrix, size=-1, pos=0;
 
@@ -117,8 +118,51 @@ int main(const int argc, const char **inputFile){
 		tour[j] = num_city;
 	}
 
+	simulated_annealing(tour);
 	imprimir_tour(tour);
 	printf("\n distancia da gulosa: %d \n", calculateTourDistance(tour));
+
+}
+
+void simulated_annealing(int *tour){
+	int best[size],R[size],i,j, t = 100;
+
+	for(i=0;i<size;i++){
+		best[i] = tour[i];
+		R[i] = tour[i];
+	}
+
+	int QualityBest = calculateTourDistance(best);
+
+	double decrement = t/1000000;
+	for(i=0;i<1000000;i++){
+		int a = rand()%size, b = rand()%size;
+		do{
+			a = rand()%size;
+		} while(a == b);
+
+		int aa = R[a], bb = R[b];
+		R[a] = bb;
+		R[b] = aa;
+
+		int QualityR = calculateTourDistance(R);
+		int QualityS = calculateTourDistance(tour);
+
+		double p = rand()/(double)RAND_MAX;
+
+		if(QualityR < QualityS || p < exp((QualityS-QualityR)/t)){
+			for(j=0;j<size;j++)
+				tour[j] = R[j];
+		}
+		t = t-decrement;
+
+		if(QualityS > QualityBest){
+			for(j=0;j<size;j++){
+				best[j]
+			}
+		}
+
+	}
 
 }
 
