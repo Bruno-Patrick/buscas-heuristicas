@@ -109,32 +109,29 @@ int main(const int argc, const char **inputFile){
 	int tour[size], i, j, menor, num_city = 0;
 	for(int i=1; i<size; i++)
 		tour[i]= -1;
-	// tour[0] = 0;
-
-	// imprimir_matriz();
-	// num_city = 0;
 	for(j=0;j<size;j++){
 		num_city = best_city(num_city, tour);
 		tour[j] = num_city;
 	}
 
-	simulated_annealing(tour);
 	imprimir_tour(tour);
-	printf("\n distancia da gulosa: %d \n", calculateTourDistance(tour));
+	printf("\n distancia com a busca gulosa: %d \n", calculateTourDistance(tour));
+	simulated_annealing(tour);
 
 }
 
-void simulated_annealing(int *tour){
-	int best[size],R[size],i,j, t = 100;
+void simulated_annealing(int *S){
+	int best[size],R[size],i,j;
+	double t = 100;
 
 	for(i=0;i<size;i++){
-		best[i] = tour[i];
-		R[i] = tour[i];
+		best[i] = S[i];
+		R[i] = S[i];
 	}
 
 	int QualityBest = calculateTourDistance(best);
 
-	double decrement = t/1000000;
+	double decrement = (t / 1000000);
 	for(i=0;i<1000000;i++){
 		int a = rand()%size, b = rand()%size;
 		do{
@@ -146,23 +143,26 @@ void simulated_annealing(int *tour){
 		R[b] = aa;
 
 		int QualityR = calculateTourDistance(R);
-		int QualityS = calculateTourDistance(tour);
-
+		int QualityS = calculateTourDistance(S);
 		double p = rand()/(double)RAND_MAX;
-
 		if(QualityR < QualityS || p < exp((QualityS-QualityR)/t)){
 			for(j=0;j<size;j++)
-				tour[j] = R[j];
+				S[j] = R[j];
 		}
+		
 		t = t-decrement;
 
-		if(QualityS > QualityBest){
+		if(QualityS < QualityBest){
 			for(j=0;j<size;j++){
-				best[j]
+				best[j] = S[j];
+				QualityBest = calculateTourDistance(best);
 			}
 		}
 
 	}
+
+	imprimir_tour(best);
+	printf("\n distancia com a simulated annieling: %d \n", calculateTourDistance(best));
 
 }
 
